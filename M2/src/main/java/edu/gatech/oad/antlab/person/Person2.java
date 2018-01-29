@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package edu.gatech.oad.antlab.person;
 
 /**
@@ -32,14 +31,12 @@ public class Person2 {
 	 */
 	private String calc(String input) {
 	  //Person 2 put your implementation here
-	  char[] c = input.toCharArray();
+	  	  char[] c = input.toCharArray();
       for (int i = 0; i < c.length; i++) {
         int pos = (int) (Math.random() * c.length);
         char temp = c[i];
         c[i] = c[pos];
         c[pos] = temp;
-      }
-      return new String(c);
 	}
 	/**
 	 * Return a string rep of this object
@@ -53,59 +50,3 @@ public class Person2 {
 	  return name + calc(input);
 	}
 }
-=======
-package edu.gatech.oad.antlab.person;
-
-/**
- *  A simple class for person 2
- *  returns their name and a
- *  modified string
- *
- * @author Bob
- * @version 1.1
- */
-public class Person2 {
-    /** Holds the persons real name */
-    private String name;
-	 	/**
-	 * The constructor, takes in the persons
-	 * name
-	 * @param pname the person's real name
-	 */
-	 public Person2(String pname) {
-	   name = pname;
-	 }
-	/**
-	 * This method should take the string
-	 * input and return its characters in
-	 * random order.
-	 * given "gtg123b" it should return
-	 * something like "g3tb1g2".
-	 *
-	 * @param input the string to be modified
-	 * @return the modified string
-	 */
-	private String calc(String input) {
-	  //Person 2 put your implementation here
-        char[] stringChar = input.toCharArray();
-        for (int i = 0; i < stringChar.length(); i++) {
-            int pos = (int) (Math.random() * stringChar.length())
-            char temp = stringChar[i];
-            stringChar[i] = stringChar[pos];
-            stringChar[pos] = temp;
-        }
-        return new String(stringChar);
-	}
-	/**
-	 * Return a string rep of this object
-	 * that varies with an input string
-	 *
-	 * @param input the varying string
-	 * @return the string representing the
-	 *         object
-	 */
-	public String toString(String input) {
-	  return name + calc(input);
-	}
-}
->>>>>>> andrew
