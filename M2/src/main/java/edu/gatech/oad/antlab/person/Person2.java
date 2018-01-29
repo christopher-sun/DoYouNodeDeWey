@@ -38,8 +38,7 @@ public class Person2 {
             stringChar[i] = stringChar[pos];
             stringChar[pos] = temp;
         }
-        String output = new String(stringChar);
-        return output;
+        return new String(stringChar);
 	}
 	/**
 	 * Return a string rep of this object
