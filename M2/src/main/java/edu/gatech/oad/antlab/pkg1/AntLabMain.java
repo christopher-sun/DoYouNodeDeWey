@@ -95,20 +95,5 @@ import edu.gatech.oad.antlab.pkg2.*;
         new AntLabMain().printOutMessage();
 
      }
-<<<<<<< HEAD
+
 }
-=======
->>>>>>> shahin
-
-
-
-
-<<<<<<< HEAD
-// <<<<<<< HEAD
-//  }
-// =======
-//  }
-// >>>>>>> chris
-=======
- }
->>>>>>> shahin
