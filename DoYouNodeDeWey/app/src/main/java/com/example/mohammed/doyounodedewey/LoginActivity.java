@@ -64,10 +64,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button cancelLogin;
+
+    public void init() {
+        cancelLogin = findViewById(R.id.cancelLogin);
+        cancelLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toy = new Intent(LoginActivity.this, WelcomeActivity.class);
+                startActivity(toy);
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        init();
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -339,7 +352,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startActivity(toy);
                 //finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError("Invalid Username/Password");
                 mPasswordView.requestFocus();
             }
         }

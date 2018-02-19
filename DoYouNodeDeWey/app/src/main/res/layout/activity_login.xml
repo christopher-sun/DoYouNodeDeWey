@@ -69,17 +69,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Sign In"
+                android:text="Log In"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/email_register_button"
-                style="?android:textAppearanceSmall"
+                android:id="@+id/cancelLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Register"
-                android:textStyle="bold" />
+                android:text="Cancel Login" />
 
         </LinearLayout>
     </ScrollView>
