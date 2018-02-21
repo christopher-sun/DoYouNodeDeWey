@@ -33,6 +33,7 @@ import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -50,10 +51,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static String[] dummyCredentials = new String[]{
-            "foo@example.com:hello", "bar@example.com:world",
-            "user:pass"
-    };
+    private static ArrayList<String> dummyCredentials = new ArrayList<String>();
+
+//    public static void addDummyCredentials(String userpass) {
+//        dummyCredentials.add(userpass);
+//    }
+
+    public static ArrayList<String> getDummyCredentials() {
+        return dummyCredentials;
+    }
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
