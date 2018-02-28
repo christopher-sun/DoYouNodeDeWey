@@ -9,6 +9,7 @@ import android.widget.Button;
 public class LoggedIn extends AppCompatActivity {
 
     public Button logoutBut;
+    public Button shelterBut;
 
     public void init() {
         logoutBut = findViewById(R.id.logoutBut);
@@ -19,6 +20,15 @@ public class LoggedIn extends AppCompatActivity {
                 startActivity(toy);
             }
             });
+        shelterBut = findViewById(R.id.shelterBut);
+        shelterBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toy = new Intent(LoggedIn.this,
+                        ShelterInfoMainScreenActivity.class);
+                startActivity(toy);
+            }
+        });
     }
 
     @Override
