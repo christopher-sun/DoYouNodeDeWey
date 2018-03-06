@@ -10,6 +10,7 @@ public class LoggedIn extends AppCompatActivity {
 
     public Button logoutBut;
     public Button shelterBut;
+    public Button searchBut;
 
     public void init() {
         logoutBut = findViewById(R.id.logoutBut);
@@ -26,6 +27,15 @@ public class LoggedIn extends AppCompatActivity {
             public void onClick(View v) {
                 Intent toy = new Intent(LoggedIn.this,
                         ShelterInfoMainScreenActivity.class);
+                startActivity(toy);
+            }
+        });
+        searchBut = findViewById(R.id.searchBut);
+        searchBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toy = new Intent(LoggedIn.this,
+                        SearchActivity.class);
                 startActivity(toy);
             }
         });

@@ -40,9 +40,18 @@
         android:id="@+id/shelterBut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/searchBut"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="23dp"
+        android:text="View Shelters" />
+
+    <Button
+        android:id="@+id/searchBut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/logoutBut"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="62dp"
-        android:text="View Shelters" />
+        android:layout_marginBottom="20dp"
+        android:text="Search Shelters" />
 
 </RelativeLayout>
