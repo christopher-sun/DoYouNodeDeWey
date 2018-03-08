@@ -17,7 +17,7 @@
             android:id="@+id/ageRestrictions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="225dp"
+            android:layout_marginBottom="240dp"
             android:layout_marginStart="16dp"
             android:text="Age Restrictions"
             android:textColor="@android:color/black"
@@ -41,11 +41,13 @@
             android:id="@+id/searchByName"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_marginBottom="405dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="Search By Name"
             android:textColor="@android:color/black"
             android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/anyone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -99,7 +101,7 @@
             android:id="@+id/families"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="26dp"
+            android:layout_marginBottom="20dp"
             android:layout_marginStart="16dp"
             android:text="Families with Newborns"
             android:textSize="18sp"
@@ -110,7 +112,7 @@
             android:id="@+id/children"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="23dp"
+            android:layout_marginBottom="24dp"
             android:layout_marginStart="16dp"
             android:text="Children"
             android:textSize="18sp"
@@ -121,12 +123,24 @@
             android:id="@+id/youngAdults"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="51dp"
+            android:layout_marginBottom="84dp"
             android:layout_marginStart="16dp"
             android:text="Young Adults"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <CheckBox
+            android:id="@+id/anyone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="33dp"
+            android:layout_marginStart="16dp"
+            android:text="Anyone"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchByName" />
 
     </android.support.constraint.ConstraintLayout>
 
