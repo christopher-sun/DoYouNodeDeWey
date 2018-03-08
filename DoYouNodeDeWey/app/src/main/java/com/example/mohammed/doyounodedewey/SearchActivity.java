@@ -1,7 +1,9 @@
 package com.example.mohammed.doyounodedewey;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,5 +34,19 @@ public class SearchActivity extends AppCompatActivity {
         families = findViewById(R.id.families);
         children = findViewById(R.id.children);
         youngAdults = findViewById(R.id.youngAdults);
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toy = new Intent(SearchActivity.this, SearchResultActivity.class);
+                toy.putExtra("QUERY", query.getText());
+                toy.putExtra("FEMALE", female.isChecked());
+                toy.putExtra("MALE", male.isChecked());
+                toy.putExtra("FAMILIES", families.isChecked());
+                toy.putExtra("CHILDREN", children.isChecked());
+                toy.putExtra("YOUNDADULTS", youngAdults.isChecked());
+                startActivity(toy);
+            }
+        });
     }
 }
