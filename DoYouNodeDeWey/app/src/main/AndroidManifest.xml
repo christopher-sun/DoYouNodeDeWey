@@ -27,6 +27,7 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".ShelterInfoMainScreenActivity" />
         <activity android:name=".SearchActivity" />
+        <activity android:name=".SearchResultActivity" />
         <activity android:name=".DynamicInfoActivity"></activity>
     </application>
 
