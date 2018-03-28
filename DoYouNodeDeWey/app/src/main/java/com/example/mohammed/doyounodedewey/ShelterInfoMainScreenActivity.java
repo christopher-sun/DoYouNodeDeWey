@@ -22,9 +22,11 @@ public class ShelterInfoMainScreenActivity extends AppCompatActivity {
 
     public ListView shelterListView;
     final Context context = this;
+    public User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        user = getIntent().getParcelableExtra("USER");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shelter_info_main_screen);
         shelterListView = findViewById(R.id.shelterListView);
@@ -44,6 +46,7 @@ public class ShelterInfoMainScreenActivity extends AppCompatActivity {
                 intent.putExtra("Address:", entry.getAddress());
                 intent.putExtra("Special Notes:", entry.getSpecialNotes());
                 intent.putExtra("Phone Number:", entry.getPhoneNumber());
+                intent.putExtra("USER", user);
 
                 startActivity(intent);
             }

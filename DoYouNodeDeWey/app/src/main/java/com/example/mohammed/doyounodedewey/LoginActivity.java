@@ -51,13 +51,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static ArrayList<String> dummyCredentials = new ArrayList<String>();
+    private static ArrayList<User> dummyCredentials = new ArrayList<User>();
 
 //    public static void addDummyCredentials(String userpass) {
 //        dummyCredentials.add(userpass);
 //    }
 
-    public static ArrayList<String> getDummyCredentials() {
+    public static ArrayList<User> getDummyCredentials() {
         return dummyCredentials;
     }
     /**
@@ -315,6 +315,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private int index;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -332,15 +333,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : dummyCredentials) {
-                String[] pieces = credential.split(":");
+            for (int i = 0; i < dummyCredentials.size(); i++) {
+                String[] pieces = {dummyCredentials.get(i).getUsername(), dummyCredentials.get(i).getPassword()};
+                if (pieces[0].equals(mEmail)) {
+                    index = i;
+                    return pieces[1].equals(mPassword);
+                }
+            }
+            return false;
+
+            /*for (User credential : dummyCredentials) {
+                String[] pieces = {credential.getUsername(), credential.getPassword()};
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
+                    index =
                     return pieces[1].equals(mPassword);
                 }
             }
 
             return false;
+            */
         }
 
         @Override
@@ -350,6 +362,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Intent toy = new Intent(LoginActivity.this, LoggedIn.class);
+                toy.putExtra("USER", dummyCredentials.get(index));
                 startActivity(toy);
                 //finish();
             } else {

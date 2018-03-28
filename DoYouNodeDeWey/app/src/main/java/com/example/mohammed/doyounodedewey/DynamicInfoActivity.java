@@ -2,6 +2,7 @@ package com.example.mohammed.doyounodedewey;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class DynamicInfoActivity extends AppCompatActivity {
@@ -13,9 +14,12 @@ public class DynamicInfoActivity extends AppCompatActivity {
     TextView address;
     TextView specialNote;
     TextView phoneNumber;
+    Button claimABed;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        user = getIntent().getParcelableExtra("USER");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dynamic_info);
 
@@ -28,6 +32,8 @@ public class DynamicInfoActivity extends AppCompatActivity {
         address = findViewById(R.id.textView6);
         specialNote = findViewById(R.id.textView7);
         phoneNumber = findViewById(R.id.textView8);
+        claimABed = findViewById(R.id.claimABed);
+
 
         //Setting the text to be displayed
         name.setText("Name: " + this.getIntent().getExtras().getString("Name:"));

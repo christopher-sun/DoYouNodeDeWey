@@ -44,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
 //            }
             @Override
             public void onClick(View view) {
-                attemptRegister();
+                attemptRegister(false);
             }
         });
 
@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
 //            }
                 @Override
                 public void onClick(View view) {
-                    attemptRegister();
+                    attemptRegister(true);
                 }
         });
     }
@@ -67,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual registration attempt is made.
      */
-    private void attemptRegister() {
+    private void attemptRegister(boolean admin) {
         if (mAuthTask != null) {
             return;
         }
@@ -110,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
 //            showProgress(true);
-            mAuthTask = new UserRegisterTask(email, password);
+            mAuthTask = new UserRegisterTask(email, password, admin);
             mAuthTask.execute((Void) null);
         }
     }
@@ -133,10 +133,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         private final String mUsername;
         private final String mPassword;
+        private final boolean admin;
 
-        UserRegisterTask(String email, String password) {
+        UserRegisterTask(String email, String password, boolean isAdmin) {
             mUsername = email;
             mPassword = password;
+            admin = isAdmin;
         }
 
         @Override
@@ -160,8 +162,7 @@ public class RegisterActivity extends AppCompatActivity {
 //                }
 //            }
 
-            LoginActivity.getDummyCredentials().add(mUsername+":"+mPassword);
-
+            LoginActivity.getDummyCredentials().add( new User(mUsername, mPassword, admin));
             return true;
         }
 
