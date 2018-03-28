@@ -12,14 +12,14 @@ public class User implements Parcelable {
     private String password;
     private final boolean admin;
     private boolean locked;
-    private String claimedSpace;
+    private Shelter claimedSpace;
     private int numClaimed;
 
     public User(String user, String pass, boolean clickedAdmin) {
         username = user;
         password = pass;
         locked = false;
-        claimedSpace = "";
+        claimedSpace = null;
         numClaimed = 0;
         admin = clickedAdmin;
     }
@@ -40,7 +40,7 @@ public class User implements Parcelable {
         return locked;
     }
 
-    public String getClaimedSpace() {
+    public Shelter getClaimedSpace() {
         return claimedSpace;
     }
 
@@ -64,13 +64,13 @@ public class User implements Parcelable {
         locked = false;
     }
 
-    public void claim(String shelter, int beds) {
+    public void claim(Shelter shelter, int beds) {
         claimedSpace = shelter;
         numClaimed = beds;
     }
 
     public void release() {
-        claimedSpace = "";
+        claimedSpace = null;
         numClaimed = 0;
     }
 
@@ -85,7 +85,7 @@ public class User implements Parcelable {
         dest.writeString(this.password);
         dest.writeByte(this.admin ? (byte) 1 : (byte) 0);
         dest.writeByte(this.locked ? (byte) 1 : (byte) 0);
-        dest.writeString(this.claimedSpace);
+        dest.writeParcelable(this.claimedSpace, flags);
         dest.writeInt(this.numClaimed);
     }
 
@@ -94,7 +94,7 @@ public class User implements Parcelable {
         this.password = in.readString();
         this.admin = in.readByte() != 0;
         this.locked = in.readByte() != 0;
-        this.claimedSpace = in.readString();
+        this.claimedSpace = in.readParcelable(Shelter.class.getClassLoader());
         this.numClaimed = in.readInt();
     }
 
