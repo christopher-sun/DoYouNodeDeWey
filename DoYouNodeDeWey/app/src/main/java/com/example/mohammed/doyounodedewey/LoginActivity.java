@@ -38,6 +38,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +65,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private FirebaseAuth mAuth;
     private String TAG;
     private boolean toReturn = false;
+
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference ref = database.getReference();
+    DatabaseReference usersRef = ref.child("Users");
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -70,13 +78,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static ArrayList<String> dummyCredentials = new ArrayList<String>();
+    private static ArrayList<User> dummyCredentials = new ArrayList<User>();
 
 //    public static void addDummyCredentials(String userpass) {
 //        dummyCredentials.add(userpass);
 //    }
 
-    public static ArrayList<String> getDummyCredentials() {
+    public static ArrayList<User> getDummyCredentials() {
         return dummyCredentials;
     }
     /**
@@ -348,6 +356,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private int index;
+        private User heldUser;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -382,6 +392,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
+
+                                usersRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                                            heldUser = (User) userSnapshot.getValue();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(FirebaseError firebaseError) {}
+                                });
 //                                updateUI(user);
                                 toReturn = true;
                             } else {
@@ -431,6 +453,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Intent toy = new Intent(LoginActivity.this, LoggedIn.class);
+                // toy.putExtra("USER", dummyCredentials.get(index));
+                toy.putExtra("USER", heldUser);
                 startActivity(toy);
                 //finish();
             } else {

@@ -22,9 +22,11 @@ public class SearchActivity extends AppCompatActivity {
     public CheckBox children;
     public CheckBox youngAdults;
     public CheckBox anyone;
+    public User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        user = getIntent().getParcelableExtra("USER");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
@@ -46,8 +48,9 @@ public class SearchActivity extends AppCompatActivity {
                 toy.putExtra("MALE", male.isChecked());
                 toy.putExtra("FAMILIES", families.isChecked());
                 toy.putExtra("CHILDREN", children.isChecked());
-                toy.putExtra("YOUNDADULTS", youngAdults.isChecked());
+                toy.putExtra("YOUNGADULTS", youngAdults.isChecked());
                 toy.putExtra("ANYONE", anyone.isChecked());
+                toy.putExtra("USER", user);
                 startActivity(toy);
             }
         });
