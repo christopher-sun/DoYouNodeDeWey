@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "748179461657",
+    "firebase_url": "https://doyounodedewey.firebaseio.com",
+    "project_id": "doyounodedewey",
+    "storage_bucket": "doyounodedewey.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748179461657:android:5a99d48d90f4e6ad",
+        "android_client_info": {
+          "package_name": "com.example.mohammed.doyounodedewey"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "748179461657-l9lvprif1rrsr2mvf78rpvm0fr71n3ro.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mohammed.doyounodedewey",
+            "certificate_hash": "f73075de98efae4197f7aee9d436687634987d52"
+          }
+        },
+        {
+          "client_id": "748179461657-0fdcud329tk91mgphqe7ujnvfudbhunn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByEq-5UByk38CYIUvj2YRMtVQCziz8iRE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748179461657-0fdcud329tk91mgphqe7ujnvfudbhunn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

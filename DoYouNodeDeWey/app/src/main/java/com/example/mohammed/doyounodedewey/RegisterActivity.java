@@ -2,12 +2,24 @@ package com.example.mohammed.doyounodedewey;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.Executor;
+
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -17,10 +29,29 @@ public class RegisterActivity extends AppCompatActivity {
 
     private UserRegisterTask mAuthTask = null;
 
+    /**
+     * Instance of FirebaseAuth
+     */
+    private FirebaseAuth mAuth;
+    private static final String TAG = "EmailPassword";
+    private boolean toReturn = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+//        File userpass = new File("userpass.txt");
+//        if (!userpass.exists()) {
+//            try {
+//                userpass.createNewFile(); //creates file if not already made
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        //Initialize FirebaseAuth instance
+        mAuth = FirebaseAuth.getInstance();
 
         mPasswordView = (EditText) findViewById(R.id.registerPassword);
         mUsernameView = (EditText) findViewById(R.id.registerUsername);
@@ -160,10 +191,131 @@ public class RegisterActivity extends AppCompatActivity {
 //                }
 //            }
 
-            LoginActivity.getDummyCredentials().add(mUsername+":"+mPassword);
+            //working one before
+//            LoginActivity.getDummyCredentials().add(mUsername+":"+mPassword);
 
-            return true;
+//            try {
+//                BufferedWriter out = new BufferedWriter(new FileWriter("userpass.txt"));
+//                out.write(mUsername+":"+mPassword);  //Replace with the string
+//                //you are trying to write
+//                out.close();
+//            }
+//            catch (IOException e)
+//            {
+//                System.out.println("Exception ");
+//
+//            }
+
+//            try (PrintWriter out = new PrintWriter("userpass.txt")) {
+//                out.println(mUsername+":"+mPassword);
+//            } catch (FileNotFoundException e) {
+//                System.out.println("Bruh");
+//            }
+
+//            FileUtils.writeStringToFile(new File("test.txt"), "Hello File");
+
+//            URL path = LoginActivity.class.getResource("userpass.txt");
+//            try (BufferedWriter out = new BufferedWriter(
+//                    new FileWriter(path.getFile()))) {
+//                out.write(mUsername+":"+mPassword);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+//            URL path = LoginActivity.class.getResource("userpass.txt");
+//                File f = new File(path.getFile());
+//                FileReader fileReader = new FileReader(f);
+//                BufferedReader bufferedReader = new BufferedReader(fileReader);
+////            FileReader fileReader = new FileReader(new File("userpass.txt"));
+////            BufferedReader bufferedReader = new BufferedReader(fileReader);
+////            StringBuffer stringBuffer = new StringBuffer();
+
+//        writeToFile(mUsername+":"+mPassword, getApplicationContext());
+
+//            File path = getApplicationContext().getFilesDir();
+//            File file = new File(path, "userpass.txt");
+//            FileOutputStream stream = null;
+//            try {
+//                stream = new FileOutputStream(file);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//            try {
+//                String stuff = mUsername;
+//                stream.write(stuff.getBytes());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } finally {
+//                try {
+//                    stream.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+
+//            createAccount(mUsername, mPassword);
+            mAuth.createUserWithEmailAndPassword(mUsername, mPassword)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "createUserWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+//                                updateUI(user);
+                                toReturn = true;
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+//                                updateUI(null);
+                                toReturn = false;
+                            }
+
+                            // ...
+                        }
+                    });
+
+
+
+//            return true;
+            return toReturn;
         }
+
+//        protected void createAccount(String email, String password) {
+//            mAuth.createUserWithEmailAndPassword(email, password)
+//                    .addOnCompleteListener((Executor) this, new OnCompleteListener<AuthResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<AuthResult> task) {
+//                            if (task.isSuccessful()) {
+//                                // Sign in success, update UI with the signed-in user's information
+//                                Log.d(TAG, "createUserWithEmail:success");
+//                                FirebaseUser user = mAuth.getCurrentUser();
+////                                updateUI(user);
+//                            } else {
+//                                // If sign in fails, display a message to the user.
+//                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+//                                Toast.makeText(RegisterActivity.this, "Authentication failed.",
+//                                        Toast.LENGTH_SHORT).show();
+////                                updateUI(null);
+//                            }
+//
+//                            // ...
+//                        }
+//                    });
+//        }
+
+//        private void writeToFile(String data, Context context) {
+//            try {
+//                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("userpass.txt", Context.MODE_PRIVATE));
+//                outputStreamWriter.write(data);
+//                outputStreamWriter.close();
+//            }
+//            catch (IOException e) {
+//                Log.e("Exception", "File write failed: " + e.toString());
+//            }
+//        }
 
         @Override
         protected void onPostExecute(final Boolean success) {

@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,10 +31,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import android.content.Intent;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
+
+import java.util.*;
+import java.io.*;
+import java.net.URL;
+import java.util.concurrent.Executor;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -42,6 +55,12 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
+    /**
+     * Instance of FirebaseAuth
+     */
+    private FirebaseAuth mAuth;
+    private String TAG;
+    private boolean toReturn = false;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -71,6 +90,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        // Check if user is signed in (non-null) and update UI accordingly.
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        updateUI(currentUser);
+//    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +105,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+
+        //Initialize FirebaseAuth instance
+        mAuth = FirebaseAuth.getInstance();
+
+
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -109,6 +141,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
     }
 
     private void populateAutoComplete() {
@@ -332,15 +365,63 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : dummyCredentials) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+            //working one
+//            for (String credential : dummyCredentials) {
+//                String[] pieces = credential.split(":");
+//                if (pieces[0].equals(mEmail)) {
+//                    // Account exists, return true if the password matches.
+//                    return pieces[1].equals(mPassword);
+//                }
+//            }
 
-            return false;
+            mAuth.signInWithEmailAndPassword(mEmail, mPassword)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+//                                updateUI(user);
+                                toReturn = true;
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+//                                updateUI(null);
+                            }
+
+                            // ...
+                        }
+                    });
+
+//            try {
+//                URL path = LoginActivity.class.getResource("userpass.txt");
+//                File f = new File(path.getFile());
+////                BufferedReader bufferedReader = new BufferedReader(new FileReader(f));
+//                FileReader fileReader = new FileReader(f);
+//                BufferedReader bufferedReader = new BufferedReader(fileReader);
+////            FileReader fileReader = new FileReader(new File("userpass.txt"));
+////            BufferedReader bufferedReader = new BufferedReader(fileReader);
+//            StringBuffer stringBuffer = new StringBuffer();
+//            String line;
+//            while ((line = bufferedReader.readLine()) != null) {
+//                String[] pieces = line.split(":");
+//                if (pieces[0].equals(mEmail)) {
+//                    // Account exists, return true if the password matches.
+//                    return pieces[1].equals(mPassword);
+//                }
+//            }
+//            fileReader.close();
+////            System.out.println("Contents of file:");
+////            System.out.println(stringBuffer.toString());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+//            return false;
+            return toReturn;
         }
 
         @Override
