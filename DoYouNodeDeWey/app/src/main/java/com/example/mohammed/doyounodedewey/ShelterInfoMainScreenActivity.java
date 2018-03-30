@@ -23,10 +23,12 @@ public class ShelterInfoMainScreenActivity extends AppCompatActivity {
     public ListView shelterListView;
     final Context context = this;
     public User user;
+    public int userIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        user = getIntent().getParcelableExtra("USER");
+        userIndex = getIntent().getExtras().getInt("USER INDEX");
+        user = UserList.getInstance().getUserList().get(userIndex);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shelter_info_main_screen);
         shelterListView = findViewById(R.id.shelterListView);
@@ -38,7 +40,7 @@ public class ShelterInfoMainScreenActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Shelter entry = (Shelter) adapterView.getItemAtPosition(i);
                 Intent intent = new Intent(context, DynamicInfoActivity.class);
-                intent.putExtra("SHELTER", entry);
+                intent.putExtra("SHELTER INDEX", i);
                 intent.putExtra("Name:", entry.getName());
                 intent.putExtra("Capacity:", entry.getCapacity());
                 intent.putExtra("Restrictions:", entry.getRestrictions());
@@ -47,7 +49,7 @@ public class ShelterInfoMainScreenActivity extends AppCompatActivity {
                 intent.putExtra("Address:", entry.getAddress());
                 intent.putExtra("Special Notes:", entry.getSpecialNotes());
                 intent.putExtra("Phone Number:", entry.getPhoneNumber());
-                intent.putExtra("USER", user);
+                intent.putExtra("USER INDEX", userIndex);
 
                 startActivity(intent);
             }

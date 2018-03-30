@@ -29,7 +29,8 @@
         <activity android:name=".SearchActivity" />
         <activity android:name=".SearchResultActivity" />
         <activity android:name=".DynamicInfoActivity"/>
-        <activity android:name=".ReportPopupActivity"></activity>
+        <activity android:name=".ReportPopupActivity"/>
+
     </application>
 
 </manifest>

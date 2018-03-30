@@ -25,10 +25,12 @@ public class SearchResultActivity extends AppCompatActivity {
     final Context context = this;
     public Button searchAgain;
     public User user;
+    public int userIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        user = getIntent().getParcelableExtra("USER");
+        userIndex = getIntent().getExtras().getInt("USER INDEX");
+        user = UserList.getInstance().getUserList().get(userIndex);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         searchAgain = findViewById(R.id.searchAgain);
@@ -36,7 +38,7 @@ public class SearchResultActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent toy = new Intent(SearchResultActivity.this, SearchActivity.class);
-                toy.putExtra("USER", user);
+                toy.putExtra("USER INDEX", userIndex);
                 startActivity(toy);
             }
         });
@@ -66,7 +68,7 @@ public class SearchResultActivity extends AppCompatActivity {
                 intent.putExtra("Address:", entry.getAddress());
                 intent.putExtra("Special Notes:", entry.getSpecialNotes());
                 intent.putExtra("Phone Number:", entry.getPhoneNumber());
-                intent.putExtra("USER", user);
+                intent.putExtra("USER INDEX", userIndex);
 
                 startActivity(intent);
             }

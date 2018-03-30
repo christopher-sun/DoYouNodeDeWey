@@ -19,9 +19,11 @@ public class LoggedIn extends AppCompatActivity {
     public Button shelterBut;
     public Button searchBut;
     public User user;
+    public int userIndex;
 
     public void init() {
-        user = getIntent().getParcelableExtra("USER");
+        userIndex = getIntent().getExtras().getInt("USER INDEX");
+        user = UserList.getInstance().getUserList().get(userIndex);
         logoutBut = findViewById(R.id.logoutBut);
         logoutBut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,7 +38,7 @@ public class LoggedIn extends AppCompatActivity {
             public void onClick(View v) {
                 Intent toy = new Intent(LoggedIn.this,
                         ShelterInfoMainScreenActivity.class);
-                toy.putExtra("USER", user);
+                toy.putExtra("USER INDEX", userIndex);
                 startActivity(toy);
             }
         });
@@ -46,7 +48,7 @@ public class LoggedIn extends AppCompatActivity {
             public void onClick(View v) {
                 Intent toy = new Intent(LoggedIn.this,
                         SearchActivity.class);
-                toy.putExtra("USER", user);
+                toy.putExtra("USER INDEX", userIndex);
                 startActivity(toy);
             }
         });
@@ -73,7 +75,7 @@ public class LoggedIn extends AppCompatActivity {
 
                 String name = temp[1].replace('%', ',');
                 if (temp[2].length() == 0) {
-                    temp[2] = "Unknown";
+                    temp[2] = "0";
                 }
                 String capacity = temp[2].replace('%', ',');
                 String restrictions = temp[3].replace('%', ',');

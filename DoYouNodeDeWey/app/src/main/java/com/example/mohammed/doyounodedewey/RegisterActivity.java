@@ -162,7 +162,7 @@ public class RegisterActivity extends AppCompatActivity {
 //                }
 //            }
 
-            LoginActivity.getDummyCredentials().add( new User(mUsername, mPassword, admin));
+            UserList.getInstance().addToUserList( new User(mUsername, mPassword, admin));
             return true;
         }
 

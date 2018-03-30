@@ -3,6 +3,7 @@ package com.example.mohammed.doyounodedewey;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,11 +20,15 @@ public class ReportPopupActivity extends AppCompatActivity {
     Button confirm;
     private User user;
     private Shelter entry;
+    private int shelterIndex;
+    private int userIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        user = getIntent().getParcelableExtra("USER");
-        entry = getIntent().getParcelableExtra("SHELTER");
+        userIndex = getIntent().getExtras().getInt("USER INDEX");
+        user = UserList.getInstance().getUserList().get(userIndex);
+        shelterIndex = getIntent().getExtras().getInt("SHELTER INDEX");
+        entry = ShelterList.getInstance().getShelterList().get(shelterIndex);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_report_popup);
@@ -35,24 +40,31 @@ public class ReportPopupActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         beds.setAdapter(adapter);
 
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int numBeds = Integer.parseInt((String) beds.getSelectedItem());
-                user.claim(entry, numBeds);
-                entry.occupy(numBeds);
-                Intent intent = new Intent(ReportPopupActivity.this, DynamicInfoActivity.class);
-                intent.putExtra("SHELTER", entry);
-                intent.putExtra("Name:", entry.getName());
-                intent.putExtra("Capacity:", entry.getCapacity());
-                intent.putExtra("Restrictions:", entry.getRestrictions());
-                intent.putExtra("Longitude:", "" + entry.getLongitude());
-                intent.putExtra("Latitude:", "" + entry.getLatitude());
-                intent.putExtra("Address:", entry.getAddress());
-                intent.putExtra("Special Notes:", entry.getSpecialNotes());
-                intent.putExtra("Phone Number:", entry.getPhoneNumber());
-                startActivity(intent);
-            }
-        });
+
+            confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (Integer.parseInt((String) beds.getSelectedItem()) <= Integer.parseInt(entry.getCapacity())) {
+                        Log.i("AAAAAAAAAAA", entry.getCapacity());
+                        Log.i("AAAAAAAAAAAA", (String)beds.getSelectedItem());
+                        int numBeds = Integer.parseInt((String) beds.getSelectedItem());
+                        user.claim(entry, numBeds, shelterIndex);
+                        entry.occupy(numBeds);
+                        Intent intent = new Intent(ReportPopupActivity.this, DynamicInfoActivity.class);
+                        intent.putExtra("SHELTER INDEX", shelterIndex);
+                        intent.putExtra("Name:", entry.getName());
+                        intent.putExtra("Capacity:", entry.getCapacity());
+                        intent.putExtra("Restrictions:", entry.getRestrictions());
+                        intent.putExtra("Longitude:", "" + entry.getLongitude());
+                        intent.putExtra("Latitude:", "" + entry.getLatitude());
+                        intent.putExtra("Address:", entry.getAddress());
+                        intent.putExtra("Special Notes:", entry.getSpecialNotes());
+                        intent.putExtra("Phone Number:", entry.getPhoneNumber());
+                        intent.putExtra("USER INDEX", userIndex);
+                        startActivity(intent);
+                    }
+                }
+            });
+
     }
 }

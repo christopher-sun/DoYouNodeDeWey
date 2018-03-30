@@ -3,7 +3,12 @@ package com.example.mohammed.doyounodedewey;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +37,13 @@ import android.widget.TextView;
 
 import android.content.Intent;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
@@ -51,15 +64,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static ArrayList<User> dummyCredentials = new ArrayList<User>();
+    //private static ArrayList<User> dummyCredentials = new ArrayList<User>();
 
 //    public static void addDummyCredentials(String userpass) {
 //        dummyCredentials.add(userpass);
 //    }
 
-    public static ArrayList<User> getDummyCredentials() {
-        return dummyCredentials;
-    }
+    //public static ArrayList<User> getDummyCredentials() {
+    //    return dummyCredentials;
+    //}
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -333,8 +346,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (int i = 0; i < dummyCredentials.size(); i++) {
-                String[] pieces = {dummyCredentials.get(i).getUsername(), dummyCredentials.get(i).getPassword()};
+            for (int i = 0; i < UserList.getInstance().getUserList().size(); i++) {
+                String[] pieces = {UserList.getInstance().getUserList().get(i).getUsername(), UserList.getInstance().getUserList().get(i).getPassword()};
                 if (pieces[0].equals(mEmail)) {
                     index = i;
                     return pieces[1].equals(mPassword);
@@ -362,7 +375,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Intent toy = new Intent(LoginActivity.this, LoggedIn.class);
-                toy.putExtra("USER", dummyCredentials.get(index));
+                toy.putExtra("USER INDEX", index);
+                toy.putExtra("USER", (Parcelable) UserList.getInstance().getUserList().get(index));
                 startActivity(toy);
                 //finish();
             } else {
@@ -381,4 +395,70 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        /*try {
+            File file = new File(getFilesDir(), "USERLIST");
+            FileOutputStream outputStream = new FileOutputStream(file);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
+            objectOutputStream.writeObject(dummyCredentials);
+            Log.i("LIST", dummyCredentials.toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        try {
+            File file = new File(getFilesDir(), "USERLIST");
+            FileInputStream inputStream=new FileInputStream(file);
+            ObjectInputStream objectInputStream =new ObjectInputStream(inputStream);
+            dummyCredentials = (ArrayList<User>) objectInputStream.readObject();
+            Log.i("LIST", dummyCredentials.toString());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }*/
+        SharedPreferences prefs0 = this.getSharedPreferences(
+               "com.example.app0", Context.MODE_PRIVATE);
+        SharedPreferences prefs1 = this.getSharedPreferences(
+                "com.example.app1", Context.MODE_PRIVATE);
+        SharedPreferences prefs2 = this.getSharedPreferences(
+                "com.example.app2", Context.MODE_PRIVATE);
+        SharedPreferences prefs3 = this.getSharedPreferences(
+                "com.example.app3", Context.MODE_PRIVATE);
+        SharedPreferences prefs4 = this.getSharedPreferences(
+                "com.example.app4", Context.MODE_PRIVATE);
+        SharedPreferences prefs5 = this.getSharedPreferences(
+                "com.example.app5", Context.MODE_PRIVATE);
+
+        for (int i = 0; i < UserList.getInstance().getUserList().size(); i++) {
+            String userKey = "user" + i;
+            String passKey = "pass" + i;
+            String adminKey = "admin" + i;
+            String lockedKey = "locked" + i;
+            String numClaimedKey = "numClaimed" + i;
+            String shelterIndexKey = "shelterIndex" + i;
+
+            prefs0.edit().putString(userKey, UserList.getInstance().getUserList().get(i).getUsername()).apply();
+            prefs1.edit().putString(passKey, UserList.getInstance().getUserList().get(i).getPassword()).apply();
+            prefs2.edit().putBoolean(adminKey, UserList.getInstance().getUserList().get(i).isAdmin()).apply();
+            prefs3.edit().putBoolean(lockedKey, UserList.getInstance().getUserList().get(i).isLocked()).apply();
+            prefs4.edit().putInt(numClaimedKey, UserList.getInstance().getUserList().get(i).getNumClaimed()).apply();
+            prefs5.edit().putInt(shelterIndexKey, UserList.getInstance().getUserList().get(i).getClaimedShelterIndex()).apply();
+        }
+    }
+
 }

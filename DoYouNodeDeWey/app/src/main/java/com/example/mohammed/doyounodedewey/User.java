@@ -14,6 +14,7 @@ public class User implements Parcelable {
     private boolean locked;
     private Shelter claimedSpace;
     private int numClaimed;
+    private int claimedShelterIndex;
 
     public User(String user, String pass, boolean clickedAdmin) {
         username = user;
@@ -22,6 +23,17 @@ public class User implements Parcelable {
         claimedSpace = null;
         numClaimed = 0;
         admin = clickedAdmin;
+        claimedShelterIndex = -1;
+    }
+
+    public User(String user, String pass, boolean clickedAdmin, int claimed, int index) {
+        username = user;
+        password = pass;
+        locked = false;
+        claimedSpace = null;
+        numClaimed = claimed;
+        admin = clickedAdmin;
+        claimedShelterIndex = index;
     }
 
     public String getUsername() {
@@ -48,6 +60,10 @@ public class User implements Parcelable {
         return numClaimed;
     }
 
+    public int getClaimedShelterIndex() {
+        return claimedShelterIndex;
+    }
+
     public void setUsername(String user) {
         username = user;
     }
@@ -64,14 +80,16 @@ public class User implements Parcelable {
         locked = false;
     }
 
-    public void claim(Shelter shelter, int beds) {
+    public void claim(Shelter shelter, int beds, int index) {
         claimedSpace = shelter;
         numClaimed = beds;
+        claimedShelterIndex = index;
     }
 
     public void release() {
         claimedSpace = null;
         numClaimed = 0;
+        claimedShelterIndex = -1;
     }
 
     @Override

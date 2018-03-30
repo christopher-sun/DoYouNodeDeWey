@@ -3,6 +3,8 @@ package com.example.mohammed.doyounodedewey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 /**
  * Created by Shawn Brisky on 2/26/2018.
  */
@@ -10,8 +12,8 @@ import android.os.Parcelable;
 class Shelter implements Parcelable {
     private int uniqueKey;
     private String name;
-    private String capacity;
     private String maxCapacity;
+    private String capacity;
     private String restrictions;
     private double longitude;
     private double latitude;
@@ -41,6 +43,10 @@ class Shelter implements Parcelable {
     }
 
     public String getCapacity() {
+        return capacity;
+    }
+
+    public String getMaxCapacity() {
         return capacity;
     }
 
