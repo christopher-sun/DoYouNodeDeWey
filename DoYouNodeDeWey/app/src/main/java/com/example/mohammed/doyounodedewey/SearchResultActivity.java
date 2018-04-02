@@ -11,6 +11,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,9 +27,13 @@ public class SearchResultActivity extends AppCompatActivity {
     public ListView searchResultsView;
     final Context context = this;
     public Button searchAgain;
+    public User user;
+    public int userIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        userIndex = getIntent().getExtras().getInt("USER INDEX");
+        user = UserList.getInstance().getUserList().get(userIndex);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         searchAgain = findViewById(R.id.searchAgain);
@@ -34,13 +41,14 @@ public class SearchResultActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent toy = new Intent(SearchResultActivity.this, SearchActivity.class);
+                toy.putExtra("USER INDEX", userIndex);
                 startActivity(toy);
             }
         });
 
         searchResultsView = findViewById(R.id.searchResultsList);
         ArrayAdapter<Shelter> shelterAdapter = new ArrayAdapter<Shelter>(this,
-                android.R.layout.simple_list_item_1, readShelterData(
+                android.R.layout.simple_list_item_1, filter(
                         getIntent().getExtras().getString("QUERY"),
                         getIntent().getExtras().getBoolean("FEMALE"),
                         getIntent().getExtras().getBoolean("MALE"),
@@ -63,71 +71,52 @@ public class SearchResultActivity extends AppCompatActivity {
                 intent.putExtra("Address:", entry.getAddress());
                 intent.putExtra("Special Notes:", entry.getSpecialNotes());
                 intent.putExtra("Phone Number:", entry.getPhoneNumber());
+                intent.putExtra("USER INDEX", userIndex);
 
                 startActivity(intent);
             }
         });
     }
 
-    private List<Shelter> readShelterData(String query, boolean female, boolean male, boolean families, boolean children, boolean youngAdults, boolean anyone) {
+    private List<Shelter> filter(String query, boolean female, boolean male, boolean families, boolean children, boolean youngAdults, boolean anyone) {
         List<Shelter> shelterList = new ArrayList<>();
-        InputStream is = getResources().openRawResource(R.raw.shelter_data);
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(is, Charset.forName("UTF-8"))
-        );
-
-        try {
-            String line = reader.readLine();
-            while( (line = reader.readLine()) != null) {
-                boolean add = true;
-
-                String[] temp = line.split(",");
-
-                String name = temp[1].replace('%', ',');
-                if (query != null && query.length() != 0) {
-                    if (!name.contains(query)) {
-                        add = false;
-                    }
-                }
-                if (temp[2].length() == 0) {
-                    temp[2] = "Unknown";
-                }
-                String capacity = temp[2].replace('%', ',');
-                String restrictions = temp[3].replace('%', ',');
-
-                double longitude = Double.parseDouble(temp[4]);
-                double latitude = Double.parseDouble(temp[5]);
-                String address = temp[6].replace('%', ',');
-                String specialNote = temp[7].replace('%', ',');
-                String phoneNumber = temp[8].replace('%', ',');
-                if (female && !restrictions.contains("Women")) {
-                    add = false;
-                }
-                if (male && !restrictions.contains("Men")) {
-                    add = false;
-                }
-                if (families && !restrictions.contains("Families w/")) {
-                    add = false;
-                }
-                if (children && !restrictions.contains("Children")) {
-                    add = false;
-                }
-                if (youngAdults && !restrictions.contains("Young adults")) {
-                    add = false;
-                }
-                if (anyone && !restrictions.contains("Anyone")) {
-                    add = false;
-                }
-
-                if (add) {
-                    Shelter newShelter = new Shelter(name, capacity, restrictions, longitude, latitude,
-                            address, specialNote, phoneNumber);
-                    shelterList.add(newShelter);
-                }
+        for (Shelter shelter : ShelterList.getInstance().getShelterList()) {
+            boolean add = true;
+            if (female && !shelter.getRestrictions().contains("Women")) {
+                add = false;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (male && !shelter.getRestrictions().contains("Men")) {
+                add = false;
+            }
+            if (families && !shelter.getRestrictions().contains("Families /w")) {
+                add = false;
+            }
+            if (children && !shelter.getRestrictions().contains("Children")) {
+                add = false;
+            }
+            if (youngAdults && !shelter.getRestrictions().contains("Young adults")) {
+                add = false;
+            }
+            if (anyone && !shelter.getRestrictions().contains("Anyone")) {
+                add = false;
+            }
+            if (add) {
+                shelterList.add(shelter);
+            }
         }
         return shelterList;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userListRef = database.getReference("UserList");
+        DatabaseReference shelterListRef = database.getReference("ShelterList");
+
+        userListRef.setValue(UserList.getInstance().getUserList());
+        shelterListRef.setValue(ShelterList.getInstance().getShelterList());
+
     }
 }
