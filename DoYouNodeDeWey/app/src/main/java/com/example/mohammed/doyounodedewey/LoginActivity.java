@@ -37,6 +37,12 @@ import android.widget.TextView;
 
 import android.content.Intent;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -84,8 +90,44 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference userListRef = database.getReference("UserList");
+    private DatabaseReference shelterListRef = database.getReference("ShelterList");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        userListRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                    UserList.getInstance().addToUserList(userSnapshot.getValue(User.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                // ...
+            }
+        });
+
+        shelterListRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                    ShelterList.getInstance().addToShelterList(userSnapshot.getValue(Shelter.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                // ...
+            }
+        });
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
@@ -399,66 +441,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onPause() {
         super.onPause();
+        userListRef.setValue(UserList.getInstance().getUserList());
+        shelterListRef.setValue(ShelterList.getInstance().getShelterList());
 
-        /*try {
-            File file = new File(getFilesDir(), "USERLIST");
-            FileOutputStream outputStream = new FileOutputStream(file);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-            objectOutputStream.writeObject(dummyCredentials);
-            Log.i("LIST", dummyCredentials.toString());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        try {
-            File file = new File(getFilesDir(), "USERLIST");
-            FileInputStream inputStream=new FileInputStream(file);
-            ObjectInputStream objectInputStream =new ObjectInputStream(inputStream);
-            dummyCredentials = (ArrayList<User>) objectInputStream.readObject();
-            Log.i("LIST", dummyCredentials.toString());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }*/
-        SharedPreferences prefs0 = this.getSharedPreferences(
-               "com.example.app0", Context.MODE_PRIVATE);
-        SharedPreferences prefs1 = this.getSharedPreferences(
-                "com.example.app1", Context.MODE_PRIVATE);
-        SharedPreferences prefs2 = this.getSharedPreferences(
-                "com.example.app2", Context.MODE_PRIVATE);
-        SharedPreferences prefs3 = this.getSharedPreferences(
-                "com.example.app3", Context.MODE_PRIVATE);
-        SharedPreferences prefs4 = this.getSharedPreferences(
-                "com.example.app4", Context.MODE_PRIVATE);
-        SharedPreferences prefs5 = this.getSharedPreferences(
-                "com.example.app5", Context.MODE_PRIVATE);
-
-        for (int i = 0; i < UserList.getInstance().getUserList().size(); i++) {
-            String userKey = "user" + i;
-            String passKey = "pass" + i;
-            String adminKey = "admin" + i;
-            String lockedKey = "locked" + i;
-            String numClaimedKey = "numClaimed" + i;
-            String shelterIndexKey = "shelterIndex" + i;
-
-            prefs0.edit().putString(userKey, UserList.getInstance().getUserList().get(i).getUsername()).apply();
-            prefs1.edit().putString(passKey, UserList.getInstance().getUserList().get(i).getPassword()).apply();
-            prefs2.edit().putBoolean(adminKey, UserList.getInstance().getUserList().get(i).isAdmin()).apply();
-            prefs3.edit().putBoolean(lockedKey, UserList.getInstance().getUserList().get(i).isLocked()).apply();
-            prefs4.edit().putInt(numClaimedKey, UserList.getInstance().getUserList().get(i).getNumClaimed()).apply();
-            prefs5.edit().putInt(shelterIndexKey, UserList.getInstance().getUserList().get(i).getClaimedShelterIndex()).apply();
-        }
     }
 
 }

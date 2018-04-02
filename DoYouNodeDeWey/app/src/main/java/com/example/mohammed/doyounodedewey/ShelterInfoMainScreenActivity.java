@@ -10,6 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,5 +57,18 @@ public class ShelterInfoMainScreenActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userListRef = database.getReference("UserList");
+        DatabaseReference shelterListRef = database.getReference("ShelterList");
+
+        userListRef.setValue(UserList.getInstance().getUserList());
+        shelterListRef.setValue(ShelterList.getInstance().getShelterList());
+
     }
 }

@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 /**
  * Created by derek on 03/06/18.
  */
@@ -56,5 +59,18 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(toy);
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userListRef = database.getReference("UserList");
+        DatabaseReference shelterListRef = database.getReference("ShelterList");
+
+        userListRef.setValue(UserList.getInstance().getUserList());
+        shelterListRef.setValue(ShelterList.getInstance().getShelterList());
+
     }
 }

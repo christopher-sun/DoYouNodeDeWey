@@ -9,6 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 /**
  * Created by derek on 03/28/18.
  */
@@ -45,8 +48,6 @@ public class ReportPopupActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (Integer.parseInt((String) beds.getSelectedItem()) <= Integer.parseInt(entry.getCapacity())) {
-                        Log.i("AAAAAAAAAAA", entry.getCapacity());
-                        Log.i("AAAAAAAAAAAA", (String)beds.getSelectedItem());
                         int numBeds = Integer.parseInt((String) beds.getSelectedItem());
                         user.claim(entry, numBeds, shelterIndex);
                         entry.occupy(numBeds);
@@ -65,6 +66,19 @@ public class ReportPopupActivity extends AppCompatActivity {
                     }
                 }
             });
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userListRef = database.getReference("UserList");
+        DatabaseReference shelterListRef = database.getReference("ShelterList");
+
+        userListRef.setValue(UserList.getInstance().getUserList());
+        shelterListRef.setValue(ShelterList.getInstance().getShelterList());
 
     }
 }

@@ -21,11 +21,15 @@ class Shelter implements Parcelable {
     private String specialNotes;
     private String phoneNumber;
 
-    public Shelter(String name, String capacity, String restrictions, double longitude,
+    public Shelter() {
+        this(null, null, null, null, 0, 0, null, null, null);
+    }
+
+    public Shelter(String name, String maxCapacity, String capacity, String restrictions, double longitude,
                    double latitude, String address, String specialNotes, String phoneNumber) {
         this.name = name;
         this.capacity = capacity;
-        this.maxCapacity = capacity;
+        this.maxCapacity = maxCapacity;
         this.restrictions = restrictions;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -47,7 +51,7 @@ class Shelter implements Parcelable {
     }
 
     public String getMaxCapacity() {
-        return capacity;
+        return maxCapacity;
     }
 
     public String getRestrictions() {
@@ -96,6 +100,7 @@ class Shelter implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.uniqueKey);
         dest.writeString(this.name);
+        dest.writeString(this.maxCapacity);
         dest.writeString(this.capacity);
         dest.writeString(this.restrictions);
         dest.writeDouble(this.longitude);
@@ -108,6 +113,7 @@ class Shelter implements Parcelable {
     protected Shelter(Parcel in) {
         this.uniqueKey = in.readInt();
         this.name = in.readString();
+        this.maxCapacity = in.readString();
         this.capacity = in.readString();
         this.restrictions = in.readString();
         this.longitude = in.readDouble();

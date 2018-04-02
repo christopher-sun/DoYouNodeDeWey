@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class DynamicInfoActivity extends AppCompatActivity {
     TextView name;
     TextView capacity;
@@ -151,6 +154,19 @@ public class DynamicInfoActivity extends AppCompatActivity {
 
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userListRef = database.getReference("UserList");
+        DatabaseReference shelterListRef = database.getReference("ShelterList");
+
+        userListRef.setValue(UserList.getInstance().getUserList());
+        shelterListRef.setValue(ShelterList.getInstance().getShelterList());
+
     }
 
 }

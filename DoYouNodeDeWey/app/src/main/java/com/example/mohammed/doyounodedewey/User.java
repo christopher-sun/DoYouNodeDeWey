@@ -16,6 +16,10 @@ public class User implements Parcelable {
     private int numClaimed;
     private int claimedShelterIndex;
 
+    public User() {
+        this("", null, false);
+    }
+
     public User(String user, String pass, boolean clickedAdmin) {
         username = user;
         password = pass;
