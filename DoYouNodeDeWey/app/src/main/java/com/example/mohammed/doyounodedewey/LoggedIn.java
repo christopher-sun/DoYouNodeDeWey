@@ -21,6 +21,7 @@ public class LoggedIn extends AppCompatActivity {
     public Button logoutBut;
     public Button shelterBut;
     public Button searchBut;
+    //public Button mapBut;
     public User user;
     public int userIndex;
 
@@ -55,12 +56,21 @@ public class LoggedIn extends AppCompatActivity {
                 startActivity(toy);
             }
         });
+//        mapBut = findViewById(R.id.mapBut);
+//        mapBut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent toy = new Intent(LoggedIn.this, MapsActivity.class);
+//                toy.putExtra("USER INDEX", userIndex);
+//                startActivity(toy);
+//            }
+//        });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //readShelterData();
+       // readShelterData();
         setContentView(R.layout.activity_logged_in);
         init();
     }
@@ -78,7 +88,7 @@ public class LoggedIn extends AppCompatActivity {
 
     }
 
-    /*private void readShelterData() {
+    private void readShelterData() {
         InputStream is = getResources().openRawResource(R.raw.shelter_data);
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(is, Charset.forName("UTF-8"))
@@ -109,5 +119,5 @@ public class LoggedIn extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 }

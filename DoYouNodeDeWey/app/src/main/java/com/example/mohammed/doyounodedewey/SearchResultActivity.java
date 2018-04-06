@@ -29,6 +29,8 @@ public class SearchResultActivity extends AppCompatActivity {
     public Button searchAgain;
     public User user;
     public int userIndex;
+    public static List<Shelter> filteredList;
+    public Button filteredMapBut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,14 @@ public class SearchResultActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent toy = new Intent(SearchResultActivity.this, SearchActivity.class);
                 toy.putExtra("USER INDEX", userIndex);
+                startActivity(toy);
+            }
+        });
+        filteredMapBut = findViewById(R.id.filteredMapBut);
+        filteredMapBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toy = new Intent(SearchResultActivity.this, MapsActivity.class);
                 startActivity(toy);
             }
         });
@@ -72,13 +82,12 @@ public class SearchResultActivity extends AppCompatActivity {
                 intent.putExtra("Special Notes:", entry.getSpecialNotes());
                 intent.putExtra("Phone Number:", entry.getPhoneNumber());
                 intent.putExtra("USER INDEX", userIndex);
-
                 startActivity(intent);
             }
         });
     }
 
-    private List<Shelter> filter(String query, boolean female, boolean male, boolean families, boolean children, boolean youngAdults, boolean anyone) {
+    public List<Shelter> filter(String query, boolean female, boolean male, boolean families, boolean children, boolean youngAdults, boolean anyone) {
         List<Shelter> shelterList = new ArrayList<>();
         for (Shelter shelter : ShelterList.getInstance().getShelterList()) {
             boolean add = true;
@@ -104,6 +113,7 @@ public class SearchResultActivity extends AppCompatActivity {
                 shelterList.add(shelter);
             }
         }
+        filteredList = shelterList;
         return shelterList;
     }
 
