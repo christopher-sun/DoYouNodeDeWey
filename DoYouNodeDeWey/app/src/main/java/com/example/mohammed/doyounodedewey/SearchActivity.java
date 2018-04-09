@@ -8,6 +8,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 /**
  * Created by derek on 03/06/18.
  */
@@ -22,9 +25,13 @@ public class SearchActivity extends AppCompatActivity {
     public CheckBox children;
     public CheckBox youngAdults;
     public CheckBox anyone;
+    public User user;
+    public int userIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        userIndex = getIntent().getExtras().getInt("USER INDEX");
+        user = UserList.getInstance().getUserList().get(userIndex);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
@@ -46,10 +53,24 @@ public class SearchActivity extends AppCompatActivity {
                 toy.putExtra("MALE", male.isChecked());
                 toy.putExtra("FAMILIES", families.isChecked());
                 toy.putExtra("CHILDREN", children.isChecked());
-                toy.putExtra("YOUNDADULTS", youngAdults.isChecked());
+                toy.putExtra("YOUNGADULTS", youngAdults.isChecked());
                 toy.putExtra("ANYONE", anyone.isChecked());
+                toy.putExtra("USER INDEX", userIndex);
                 startActivity(toy);
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userListRef = database.getReference("UserList");
+        DatabaseReference shelterListRef = database.getReference("ShelterList");
+
+        userListRef.setValue(UserList.getInstance().getUserList());
+        shelterListRef.setValue(ShelterList.getInstance().getShelterList());
+
     }
 }

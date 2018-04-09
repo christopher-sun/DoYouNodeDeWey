@@ -3,7 +3,12 @@ package com.example.mohammed.doyounodedewey;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +37,19 @@ import android.widget.TextView;
 
 import android.content.Intent;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
@@ -51,15 +70,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static ArrayList<String> dummyCredentials = new ArrayList<String>();
+    //private static ArrayList<User> dummyCredentials = new ArrayList<User>();
 
 //    public static void addDummyCredentials(String userpass) {
 //        dummyCredentials.add(userpass);
 //    }
 
-    public static ArrayList<String> getDummyCredentials() {
-        return dummyCredentials;
-    }
+    //public static ArrayList<User> getDummyCredentials() {
+    //    return dummyCredentials;
+    //}
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -71,8 +90,44 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference userListRef = database.getReference("UserList");
+    private DatabaseReference shelterListRef = database.getReference("ShelterList");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        userListRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                    UserList.getInstance().addToUserList(userSnapshot.getValue(User.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                // ...
+            }
+        });
+
+        shelterListRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
+                    ShelterList.getInstance().addToShelterList(userSnapshot.getValue(Shelter.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                // ...
+            }
+        });
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         // Set up the login form.
@@ -315,6 +370,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String mEmail;
         private final String mPassword;
+        private int index;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -332,15 +388,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
 
-            for (String credential : dummyCredentials) {
-                String[] pieces = credential.split(":");
+            for (int i = 0; i < UserList.getInstance().getUserList().size(); i++) {
+                String[] pieces = {UserList.getInstance().getUserList().get(i).getUsername(), UserList.getInstance().getUserList().get(i).getPassword()};
+                if (pieces[0].equals(mEmail)) {
+                    index = i;
+                    return pieces[1].equals(mPassword);
+                }
+            }
+            return false;
+
+            /*for (User credential : dummyCredentials) {
+                String[] pieces = {credential.getUsername(), credential.getPassword()};
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
+                    index =
                     return pieces[1].equals(mPassword);
                 }
             }
 
             return false;
+            */
         }
 
         @Override
@@ -350,6 +417,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Intent toy = new Intent(LoginActivity.this, LoggedIn.class);
+                toy.putExtra("USER INDEX", index);
+                toy.putExtra("USER", (Parcelable) UserList.getInstance().getUserList().get(index));
                 startActivity(toy);
                 //finish();
             } else {
@@ -368,4 +437,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        userListRef.setValue(UserList.getInstance().getUserList());
+        shelterListRef.setValue(ShelterList.getInstance().getShelterList());
+
+    }
+
 }
