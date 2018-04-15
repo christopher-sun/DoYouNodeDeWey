@@ -78,12 +78,14 @@ class Shelter implements Parcelable {
         return phoneNumber;
     }
 
-    public void occupy(int beds) {
-        capacity = String.valueOf(Integer.parseInt(capacity) - beds);
+    public void occupy(int beds) { capacity = String.valueOf(Integer.parseInt(capacity) - beds);
     }
 
     public void vacate(int beds) {
-        capacity = String.valueOf(Integer.parseInt(capacity) + beds);
+        if (Integer.parseInt(capacity) + beds <= Integer.parseInt(maxCapacity)) {
+            capacity = String.valueOf(Integer.parseInt(capacity) + beds);
+        }
+
     }
 
     @Override
