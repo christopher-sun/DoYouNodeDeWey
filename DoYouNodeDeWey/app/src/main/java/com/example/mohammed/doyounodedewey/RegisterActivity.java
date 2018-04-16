@@ -131,9 +131,17 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isUsernameValid(String username) {
-        //TODO: Replace this with your own logic
-        return username.length() > 3;
+    public boolean isUsernameValid(String username) {
+//        if (email.contains("@") && email.contains(".")) {
+//            return email.length() > 5;
+//        } else {
+//            return false;
+//        }
+        if (Character.isUpperCase(username.charAt(0))) {
+            return username.length() > 5;
+        } else {
+            return false;
+        }
     }
 
     private boolean isPasswordValid(String password) {

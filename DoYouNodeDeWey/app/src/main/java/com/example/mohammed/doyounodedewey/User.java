@@ -40,6 +40,19 @@ public class User implements Parcelable {
         claimedShelterIndex = index;
     }
 
+    public boolean isUsernameValid(String username) {
+//        if (email.contains("@") && email.contains(".")) {
+//            return email.length() > 5;
+//        } else {
+//            return false;
+//        }
+        if (Character.isUpperCase(username.charAt(0))) {
+            return username.length() >= 5;
+        } else {
+            return false;
+        }
+    }
+
     public String getUsername() {
         return username;
     }

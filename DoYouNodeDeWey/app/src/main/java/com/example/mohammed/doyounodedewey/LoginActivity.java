@@ -262,9 +262,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    // This actually tests validity for the USERNAME
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.length() > 3;
+//        if (email.contains("@") && email.contains(".")) {
+//            return email.length() > 5;
+//        } else {
+//            return false;
+//        }
+        if (Character.isUpperCase(email.charAt(0))) {
+            return email.length() > 5;
+        } else {
+            return false;
+        }
     }
 
     private boolean isPasswordValid(String password) {
